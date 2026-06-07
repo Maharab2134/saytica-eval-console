@@ -47,7 +47,12 @@ const SETTINGS_SECTIONS = [
 const QUICK_ITEMS = [
   { label: "Profile ready", value: "92%", icon: Eye, tone: "text-emerald-500" },
   { label: "Security checks", value: "4", icon: Lock, tone: "text-sky-500" },
-  { label: "Workspace presets", value: "8", icon: SlidersHorizontal, tone: "text-amber-500" },
+  {
+    label: "Workspace presets",
+    value: "8",
+    icon: SlidersHorizontal,
+    tone: "text-amber-500",
+  },
 ] as const;
 
 export default function SettingsPage() {
@@ -66,8 +71,8 @@ export default function SettingsPage() {
                 Make the console feel like your own command center.
               </h2>
               <p className="max-w-xl text-sm leading-6 text-muted-foreground md:text-base">
-                Centralize appearance, privacy, and notification preferences so the
-                dashboard stays clean, focused, and easy to use every day.
+                Centralize appearance, privacy, and notification preferences so
+                the dashboard stays clean, focused, and easy to use every day.
               </p>
             </div>
           </div>
@@ -110,7 +115,7 @@ export default function SettingsPage() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        {SETTINGS_SECTIONS.map((section, index) => {
+        {SETTINGS_SECTIONS.map((section) => {
           const Icon = section.icon;
           return (
             <section
@@ -120,7 +125,10 @@ export default function SettingsPage() {
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-2">
                   <div className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-muted">
-                    <Icon className="h-5 w-5 text-foreground" aria-hidden="true" />
+                    <Icon
+                      className="h-5 w-5 text-foreground"
+                      aria-hidden="true"
+                    />
                   </div>
                   <div>
                     <h3 className="text-lg font-semibold">{section.title}</h3>
@@ -150,7 +158,8 @@ export default function SettingsPage() {
             <div>
               <h3 className="text-lg font-semibold">Recommended setup flow</h3>
               <p className="mt-1 text-sm text-muted-foreground">
-                Start here if you want the interface tuned for daily review work.
+                Start here if you want the interface tuned for daily review
+                work.
               </p>
             </div>
             <Button asChild variant="outline" size="sm">
@@ -171,7 +180,9 @@ export default function SettingsPage() {
                 <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                   Step {index + 1}
                 </p>
-                <p className="mt-2 text-sm font-medium text-foreground">{step}</p>
+                <p className="mt-2 text-sm font-medium text-foreground">
+                  {step}
+                </p>
               </div>
             ))}
           </div>
@@ -181,23 +192,33 @@ export default function SettingsPage() {
           <h3 className="text-lg font-semibold">Quick actions</h3>
           <div className="mt-4 space-y-3">
             {[
-              { label: "Toggle theme", hint: "Switch appearance from the header" },
-              { label: "Review roles", hint: "Check who owns tasks and models" },
+              {
+                label: "Toggle theme",
+                hint: "Switch appearance from the header",
+              },
+              {
+                label: "Review roles",
+                hint: "Check who owns tasks and models",
+              },
               { label: "Open help", hint: "See usage guidance and shortcuts" },
             ].map((action) => (
               <div
                 key={action.label}
                 className="rounded-xl border border-border bg-muted/30 p-4"
               >
-                <p className="text-sm font-medium text-foreground">{action.label}</p>
-                <p className="mt-1 text-sm text-muted-foreground">{action.hint}</p>
+                <p className="text-sm font-medium text-foreground">
+                  {action.label}
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {action.hint}
+                </p>
               </div>
             ))}
           </div>
 
           <div className="mt-5 rounded-xl border border-dashed border-border/70 bg-background/60 p-4 text-sm text-muted-foreground">
-            Settings will stay responsive on desktop and mobile, and the links above
-            take you back to the rest of the console when needed.
+            Settings will stay responsive on desktop and mobile, and the links
+            above take you back to the rest of the console when needed.
           </div>
         </section>
       </div>

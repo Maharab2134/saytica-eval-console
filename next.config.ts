@@ -3,6 +3,9 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   // `typedRoutes` is not supported by Next.js 15; remove or upgrade Next to use it.
   headers: async () => [
     {

@@ -128,3 +128,12 @@ providers/ — QueryProvider, ThemeProvider
 git clone https://github.com/Maharab2134/saytica-eval-console
 cd saytica-eval-console
 npm install
+
+## Future Improvements
+
+- PostgreSQL + Prisma
+- Authentication & RBAC
+- Real-time updates using WebSockets
+- Audit logging
+- Advanced analytics
+- Multi-project filtering
