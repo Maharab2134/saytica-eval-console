@@ -14,8 +14,18 @@ import { NormalizedTask, TaskStatus } from "@/types/task";
 
 export function TasksClient() {
   const {
-    tasks, stats, projectSummaries, role, setRole,
-    updateStatus, isUpdating, isLoading, isError, error, refetch, allTasks,
+    tasks,
+    stats,
+    projectSummaries,
+    role,
+    setRole,
+    updateStatus,
+    isUpdating,
+    isLoading,
+    isError,
+    error,
+    refetch,
+    allTasks,
     updateError,
   } = useTasks();
 
@@ -53,16 +63,24 @@ export function TasksClient() {
         className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
       >
         <div>
-          <h2 className="text-xl font-bold text-foreground tracking-tight">Task Board</h2>
+          <h2 className="text-xl font-bold text-foreground tracking-tight">
+            Task Board
+          </h2>
           <p className="text-sm text-muted-foreground mt-1">
             {role === "annotator"
-              ? `${tasks.length} tasks assigned to you`
+              ? `${tasks.length} tasks available`
               : `${tasks.length} tasks across ${stats.totalProjects} project${stats.totalProjects !== 1 ? "s" : ""}`}
           </p>
         </div>
         <div className="flex items-center gap-3">
           <RoleToggle role={role} onRoleChange={setRole} />
-          <Button variant="outline" size="sm" onClick={handleExport} className="gap-2" aria-label="Export tasks to CSV">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExport}
+            className="gap-2"
+            aria-label="Export tasks to CSV"
+          >
             <Download className="h-4 w-4" aria-hidden="true" />
             <span className="hidden sm:inline">Export</span>
           </Button>
@@ -77,34 +95,28 @@ export function TasksClient() {
           onRetry={refetch}
         />
       ) : (
-        <AnimatePresence mode="wait">
-          {role === "annotator" ? (
-            <motion.div
-              key="annotator"
-              initial={{ opacity: 0, x: -16 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 16 }}
-              transition={{ duration: 0.25 }}
-            >
-              <TaskBoard
-                tasks={tasks}
-                onUpdate={handleUpdate}
-                isUpdating={isUpdating}
-                isLoading={isLoading}
-              />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="client"
-              initial={{ opacity: 0, x: 16 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -16 }}
-              transition={{ duration: 0.25 }}
-            >
-              <ClientDashboard stats={stats} projects={projectSummaries} />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <div className="space-y-6">
+          <AnimatePresence mode="wait">
+            {role === "client" ? (
+              <motion.div
+                key="client"
+                initial={{ opacity: 0, x: 16 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -16 }}
+                transition={{ duration: 0.25 }}
+              >
+                <ClientDashboard stats={stats} projects={projectSummaries} />
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
+
+          <TaskBoard
+            tasks={tasks}
+            onUpdate={handleUpdate}
+            isUpdating={isUpdating}
+            isLoading={isLoading}
+          />
+        </div>
       )}
     </div>
   );

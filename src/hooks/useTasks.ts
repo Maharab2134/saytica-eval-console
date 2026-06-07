@@ -3,42 +3,39 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState, useCallback } from "react";
 import { fetchTasks, updateTaskStatus } from "@/services/taskService";
-import { NormalizedTask, TaskStatus, UserRole, VALID_TRANSITIONS } from "@/types/task";
+import {
+  NormalizedTask,
+  TaskStatus,
+  UserRole,
+  VALID_TRANSITIONS,
+} from "@/types/task";
 import { getTaskStats, getProjectSummaries } from "@/lib/analytics";
 
 const QUERY_KEY = ["tasks"] as const;
-const ANNOTATOR_ID = "u_annotator";
-const CLIENT_ID    = "c1";
 
 export function useTasks() {
   const [role, setRole] = useState<UserRole>("annotator");
-  const queryClient     = useQueryClient();
+  const queryClient = useQueryClient();
 
   const query = useQuery({
     queryKey: QUERY_KEY,
-    queryFn:  fetchTasks,
+    queryFn: fetchTasks,
     staleTime: 30_000,
   });
 
   const allTasks = query.data ?? [];
 
-  // Annotator sees only their assigned tasks
-  const annotatorTasks = useMemo(
-    () => allTasks.filter(t => t.assignedTo === ANNOTATOR_ID),
-    [allTasks]
-  );
-
-  // Client sees tasks for their client ID
-  const clientTasks = useMemo(
-    () => allTasks.filter(t => t.clientId === CLIENT_ID),
-    [allTasks]
-  );
+  const annotatorTasks = useMemo(() => allTasks, [allTasks]);
+  const clientTasks = useMemo(() => allTasks, [allTasks]);
 
   const visibleTasks = role === "annotator" ? annotatorTasks : clientTasks;
 
-  const stats          = useMemo(() => getTaskStats(visibleTasks), [visibleTasks]);
-  const projectSummaries = useMemo(() => getProjectSummaries(visibleTasks), [visibleTasks]);
-  const globalStats    = useMemo(() => getTaskStats(allTasks), [allTasks]);
+  const stats = useMemo(() => getTaskStats(visibleTasks), [visibleTasks]);
+  const projectSummaries = useMemo(
+    () => getProjectSummaries(visibleTasks),
+    [visibleTasks],
+  );
+  const globalStats = useMemo(() => getTaskStats(allTasks), [allTasks]);
 
   // ── Status update mutation with optimistic UI ──
   const mutation = useMutation({
@@ -50,8 +47,9 @@ export function useTasks() {
       const previous = queryClient.getQueryData<NormalizedTask[]>(QUERY_KEY);
 
       // Optimistic update
-      queryClient.setQueryData<NormalizedTask[]>(QUERY_KEY, old =>
-        old?.map(t => t.id === id ? { ...t, status } : t) ?? []
+      queryClient.setQueryData<NormalizedTask[]>(
+        QUERY_KEY,
+        (old) => old?.map((t) => (t.id === id ? { ...t, status } : t)) ?? [],
       );
 
       return { previous };
@@ -76,7 +74,7 @@ export function useTasks() {
       }
       mutation.mutate({ id: task.id, status: newStatus });
     },
-    [mutation]
+    [mutation],
   );
 
   const getNextStatus = useCallback(
@@ -84,11 +82,11 @@ export function useTasks() {
       const transitions = VALID_TRANSITIONS[current];
       return transitions?.length ? transitions[0] : null;
     },
-    []
+    [],
   );
 
   return {
-    tasks:           visibleTasks,
+    tasks: visibleTasks,
     allTasks,
     annotatorTasks,
     clientTasks,
@@ -99,11 +97,11 @@ export function useTasks() {
     setRole,
     updateStatus,
     getNextStatus,
-    isUpdating:      mutation.isPending,
-    updateError:     mutation.error,
-    isLoading:       query.isLoading,
-    isError:         query.isError,
-    error:           query.error,
-    refetch:         query.refetch,
+    isUpdating: mutation.isPending,
+    updateError: mutation.error,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    error: query.error,
+    refetch: query.refetch,
   };
 }
