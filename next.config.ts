@@ -1,7 +1,18 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  reactStrictMode: true,
+  poweredByHeader: false,
+  // `typedRoutes` is not supported by Next.js 15; remove or upgrade Next to use it.
+  headers: async () => [
+    {
+      source: "/api/:path*",
+      headers: [
+        { key: "X-Content-Type-Options", value: "nosniff" },
+        { key: "X-Frame-Options", value: "DENY" },
+      ],
+    },
+  ],
 };
 
 export default nextConfig;
